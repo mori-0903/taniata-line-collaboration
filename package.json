@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "pnpm exec ts-node src/index.ts",
+    "run": "pnpm exec ts-node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "build:watch": "tsc -w",
+    "build": "pnpm --package=typescript dlx tsc ",
+    "build:watch": "pnpm --package=typescript dlx tsc -w",
     "pre-deploy": "pnpm --package=typescript dlx tsc && pnpm exec biome check --write"
   },
   "dependencies": {

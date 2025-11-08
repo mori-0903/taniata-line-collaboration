@@ -2,6 +2,7 @@ import axios from "axios"
 import dayjs from "dayjs"
 import timezone from "dayjs/plugin/timezone"
 import utc from "dayjs/plugin/utc"
+import type { WeightObject } from "./type"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -10,7 +11,7 @@ dayjs.extend(timezone)
  * タニタのAPIから体重データを取得する
  * @returns
  */
-export const fetchWeight = async () => {
+export async function fetchWeight(): Promise<WeightObject> {
   const url = "https://www.healthplanet.jp/status/innerscan.json"
   const jstNow = dayjs().tz("Asia/Tokyo")
   const date14DaysAgo = `${jstNow.subtract(14, "day").format("YYYYMMDD")}000000`

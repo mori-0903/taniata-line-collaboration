@@ -11,3 +11,13 @@ export interface WeightData {
   model: string // 測定機器名
   tag: string // 体重 タグ(6021) 今は体重(6021)と体脂肪率(6022)のみ
 }
+
+export interface proccessedWeightData {
+  meanWeight: string // ここ2週間の平均体重
+  currentWeight: string // 今日の最新体重、今日のデータがなければNaN
+}
+
+export interface LINEMessage {
+  type: "text"
+  text: string
+}
