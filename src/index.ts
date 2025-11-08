@@ -20,7 +20,7 @@ async function index() {
       },
       {
         type: "text",
-        text: `ここ2週間の平均体重: ${meanWeight}kg \n${today}の最新体重(kg):`,
+        text: `ここ2週間の平均体重: ${meanWeight}kg \n${today}の最新体重:${currentWeight}kg`,
       },
       {
         type: "text",
