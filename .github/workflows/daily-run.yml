@@ -2,7 +2,7 @@ name: Daily Weight Notification
 
 on:
   schedule:
-    - cron: "30 23 * * *" # UTCで毎日23時30分（JSTで翌日の8時30分）
+    - cron: "30 03 * * *" # UTCで毎日03時30分（JSTで昼12時30分）
   workflow_dispatch:
 
 jobs:
