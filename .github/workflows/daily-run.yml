@@ -5,19 +5,42 @@ on:
     - cron: "30 23 * * *" # UTCで毎日23時30分（JSTで翌日の8時30分）
   workflow_dispatch:
 
-
 jobs:
   build-and-run:
     runs-on: ubuntu-latest
 
-    env: # 環境変数を設定
-        HEALTH_PLANET_ACCESS_TOKEN: ${{ secrets.HEALTH_PLANET_ACCESS_TOKEN }}
-        LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
-        LINE_USER_ID: ${{ vars.LINE_USER_ID }}
-
     steps:
+
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Check if secrets and vars are set (Debug)
+        run: |
+          if [ -z "${{ secrets.HEALTH_PLANET_ACCESS_TOKEN }}" ]; then
+            echo "[Debug] HEALTH_PLANET_ACCESS_TOKEN is NOT set or empty."
+          else
+            echo "[Debug] HEALTH_PLANET_ACCESS_TOKEN is set (masked)."
+          fi
+          
+          if [ -z "${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}" ]; then
+            echo "[Debug] LINE_CHANNEL_ACCESS_TOKEN is NOT set or empty."
+          else
+            echo "[Debug] LINE_CHANNEL_ACCESS_TOKEN is set (masked)."
+          fi
+
+          if [ -z "${{ vars.LINE_USER_ID }}" ]; then
+            echo "[Debug] LINE_USER_ID var is NOT set or empty."
+          else
+            # 注意: varsはマスクされないため、値がログに出力される可能性があります
+            echo "[Debug] LINE_USER_ID var is set."
+            # echo "[Debug] LINE_USER_ID var is: ${{ vars.LINE_USER_ID }}" # デバッグ時のみ
+          fi
+
+      - name: Create .env file
+        run: |
+          echo "HEALTHPLANET_ACCESS_TOKEN=${{ secrets.HEALTH_PLANET_ACCESS_TOKEN }}" >> .env
+          echo "LINE_CHANNEL_ACCESS_TOKEN=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}" >> .env
+          echo "LINE_USER_ID=${{ vars.LINE_USER_ID }}" >> .env 
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -35,4 +58,4 @@ jobs:
         run: pnpm build # tscを実行するように、事前にbuildコマンドを用意
 
       - name: Run script
-        run: pnpm run
+        run: pnpm run job
