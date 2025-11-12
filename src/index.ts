@@ -7,12 +7,13 @@ import type { LINEMessage } from "./type"
 require("dotenv").config()
 
 async function index() {
+  const sheet_url = process.env.SPREAD_SHEET_URL
   const fetchData = await fetchWeight()
   const { currentWeight, meanWeight } = processWeightData(fetchData)
   if (currentWeight) {
     const today = dayjs().tz("Asia/Tokyo").format("YYYY年MM月DD日")
-    const spleadsheetUrl =
-      "https://docs.google.com/spreadsheets/d/1-R4P51Zy_WFRKIliaXERNq2hiON26hRVVf4hhKNxjXQ/edit?usp=sharing"
+    const spleadsheetUrl = sheet_url ? sheet_url : "https://google.com"
+
     const messageObject: LINEMessage[] = [
       {
         type: "text",
