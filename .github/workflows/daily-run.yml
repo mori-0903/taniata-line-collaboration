@@ -1,53 +1,53 @@
 name: Daily Weight Notification
 
 on:
-    schedule:
-        - cron: "10 03 * * *" # UTCで毎日03時30分（JSTで昼12時30分）
-    workflow_dispatch:
+  schedule:
+    - cron: "00 03 * * *" # UTCで毎日03時30分（JSTで昼12時30分）
+  workflow_dispatch:
 
 jobs:
-    build-and-run:
-        runs-on: ubuntu-slim
-        env:
-            LANG: C.UTF-8
-            LC_ALL: C.UTF-8
+  build-and-run:
+    runs-on: ubuntu-slim
+    env:
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-            - name: Create .env file
-              run: |
-                  echo "HEALTHPLANET_ACCESS_TOKEN=${{ secrets.HEALTHPLANET_ACCESS_TOKEN }}" >> .env
-                  echo "LINE_CHANNEL_ACCESS_TOKEN=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}" >> .env
-                  echo "LINE_USER_ID=${{ vars.LINE_USER_ID }}" >> .env 
-                  echo "SPREAD_SHEET_URL=${{ vars.SPREAD_SHEET_URL }}" >> .env
+      - name: Create .env file
+        run: |
+          echo "HEALTHPLANET_ACCESS_TOKEN=${{ secrets.HEALTHPLANET_ACCESS_TOKEN }}" >> .env
+          echo "LINE_CHANNEL_ACCESS_TOKEN=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}" >> .env
+          echo "LINE_USER_ID=${{ vars.LINE_USER_ID }}" >> .env
+          echo "SPREAD_SHEET_URL=${{ vars.SPREAD_SHEET_URL }}" >> .env
 
-            - name: Set up Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "22.x"
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
 
-            - uses: pnpm/action-setup@v4
-              with:
-                  version: "10.x"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "10.x"
 
-            - name: Install dependencies
-              run: pnpm i --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile
 
-            - name: Compile TypeScript
-              run: pnpm build # tscを実行するように、事前にbuildコマンドを用意
+      - name: Compile TypeScript
+        run: pnpm build # tscを実行するように、事前にbuildコマンドを用意
 
-            - name: Run script
-              run: pnpm run job
+      - name: Run script
+        run: pnpm run job
 
-            - name: Re Create .env file
-              run: |
-                  rm -f .env
-                  echo "HEALTHPLANET_ACCESS_TOKEN=${{ secrets.HEALTHPLANET_AZUSA_ACCESS_TOKEN }}" >> .env
-                  echo "LINE_CHANNEL_ACCESS_TOKEN=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}" >> .env
-                  echo "LINE_USER_ID=${{ vars.AZUSA_LINE_USER_ID }}" >> .env 
-                  echo "SPREAD_SHEET_URL=${{ vars.SPREAD_SHEET_URL }}" >> .env
+      - name: Re Create .env file
+        run: |
+          rm -f .env
+          echo "HEALTHPLANET_ACCESS_TOKEN=${{ secrets.HEALTHPLANET_AZUSA_ACCESS_TOKEN }}" >> .env
+          echo "LINE_CHANNEL_ACCESS_TOKEN=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}" >> .env
+          echo "LINE_USER_ID=${{ vars.AZUSA_LINE_USER_ID }}" >> .env
+          echo "SPREAD_SHEET_URL=${{ vars.SPREAD_SHEET_URL }}" >> .env
 
-            - name: Re Run script
-              run: pnpm run job
+      - name: Re Run script
+        run: pnpm run job
